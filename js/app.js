@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Set default view
     switchView('explore');
 
-    console.log('🚀 Karnataka Travel App initialized');
+    console.log('🚀 Gaalipata Adventures initialized');
 });
 
 // ---------- Navigation ----------
