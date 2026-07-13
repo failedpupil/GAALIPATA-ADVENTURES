@@ -3,6 +3,19 @@
 // Karnataka Travel Recommendation Website
 // ============================================================
 
+// ---------- All Karnataka Districts (from GeoJSON) ----------
+
+const KARNATAKA_DISTRICTS = [
+    'Bagalkote', 'Ballari', 'Belagavi', 'Bengaluru Rural', 'Bengaluru Urban',
+    'Bidar', 'Chamarajanagara', 'Chikkaballapura', 'Chikkamagaluru', 'Chitradurga',
+    'Dakshina Kannada', 'Davanagere', 'Dharwad', 'Gadag', 'Hassan',
+    'Haveri', 'Kalaburagi', 'Kodagu', 'Kolar', 'Koppal',
+    'Mandya', 'Mysuru', 'Raichur', 'Ramanagara', 'Shivamogga',
+    'Tumakuru', 'Udupi', 'Uttara Kannada', 'Vijayapura', 'Yadgir'
+];
+
+// ---------- Init ----------
+
 function initFormPanel() {
     const panel = document.getElementById('explore-panel');
     if (!panel) return;
@@ -38,6 +51,32 @@ function initFormPanel() {
                         <span>${cat.label}</span>
                     </label>
                 `).join('')}
+            </div>
+        </div>
+
+        <!-- District / Multi-select -->
+        <div class="form-group">
+            <label><span class="label-icon">🗺️</span> Select District</label>
+            <div class="district-multiselect" id="district-multiselect">
+                <div class="district-trigger" onclick="toggleDistrictDropdown()">
+                    <span class="district-trigger-text" id="district-trigger-text">All Districts</span>
+                    <span class="district-trigger-arrow">▾</span>
+                </div>
+                <div class="district-dropdown" id="district-dropdown">
+                    <div class="district-dropdown-header">
+                        <span class="district-selected-count" id="district-selected-count">0 selected</span>
+                        <button class="district-clear-btn" onclick="clearDistrictSelection(event)">Clear</button>
+                    </div>
+                    <div class="district-dropdown-list" id="district-dropdown-list">
+                        ${KARNATAKA_DISTRICTS.map(d => `
+                            <label class="district-option">
+                                <input type="checkbox" value="${d}" onchange="onDistrictChange()">
+                                <span class="district-check">✓</span>
+                                <span>${d}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -112,6 +151,64 @@ function initFormPanel() {
     // Setup chip toggle behavior
     setupChipToggles();
     renderResults(DataStore.getAll());
+
+    // Close district dropdown on outside click
+    document.addEventListener('click', handleDistrictOutsideClick);
+}
+
+// ---------- District Multi-Select ----------
+
+function toggleDistrictDropdown() {
+    const dropdown = document.getElementById('district-dropdown');
+    if (dropdown) dropdown.classList.toggle('open');
+}
+
+function handleDistrictOutsideClick(e) {
+    const multiselect = document.getElementById('district-multiselect');
+    if (multiselect && !multiselect.contains(e.target)) {
+        const dropdown = document.getElementById('district-dropdown');
+        if (dropdown) dropdown.classList.remove('open');
+    }
+}
+
+function getDistrictSelections() {
+    const list = document.getElementById('district-dropdown-list');
+    if (!list) return [];
+    return Array.from(list.querySelectorAll('input:checked')).map(i => i.value);
+}
+
+function onDistrictChange() {
+    updateDistrictTrigger();
+    onFilterChange();
+}
+
+function updateDistrictTrigger() {
+    const selected = getDistrictSelections();
+    const triggerText = document.getElementById('district-trigger-text');
+    const countText = document.getElementById('district-selected-count');
+
+    if (triggerText) {
+        if (selected.length === 0) {
+            triggerText.textContent = 'All Districts';
+        } else if (selected.length <= 2) {
+            triggerText.textContent = selected.join(', ');
+        } else {
+            triggerText.textContent = `${selected.length} districts selected`;
+        }
+    }
+    if (countText) {
+        countText.textContent = `${selected.length} selected`;
+    }
+}
+
+function clearDistrictSelection(e) {
+    if (e) e.stopPropagation();
+    const list = document.getElementById('district-dropdown-list');
+    if (list) {
+        list.querySelectorAll('input').forEach(input => input.checked = false);
+    }
+    updateDistrictTrigger();
+    onFilterChange();
 }
 
 // ---------- Chip Toggle Behavior ----------
@@ -153,6 +250,7 @@ function getActiveFilters() {
     return {
         seasons: getChecked('season-filters'),
         categories: getChecked('category-filters'),
+        districts: getDistrictSelections(),
         transport: getChecked('transport-filters'),
         durations: getChecked('duration-filters'),
         maxBudget: budgetSlider ? parseInt(budgetSlider.value) : 50000
@@ -176,6 +274,11 @@ function applyFilters() {
         // Category filter
         if (filters.categories.length > 0) {
             if (!filters.categories.includes(loc.category)) return false;
+        }
+
+        // District filter
+        if (filters.districts.length > 0) {
+            if (!filters.districts.includes(loc.district)) return false;
         }
 
         // Transport filter
@@ -207,6 +310,9 @@ function clearFilters() {
     document.querySelectorAll('.checkbox-chip').forEach(chip => {
         chip.classList.remove('checked');
     });
+
+    // Reset district multi-select
+    clearDistrictSelection();
 
     // Reset budget
     const slider = document.getElementById('budget-slider');

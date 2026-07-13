@@ -35,6 +35,12 @@
         </a>
         <ul class="navbar-nav">
             <li>
+                <button class="nav-btn" data-view="plans" onclick="switchView('plans')" id="nav-plans">
+                    <span class="icon">📋</span>
+                    <span>Gaalipata Plans</span>
+                </button>
+            </li>
+            <li>
                 <button class="nav-btn active" data-view="explore" onclick="switchView('explore')" id="nav-explore">
                     <span class="icon">🧭</span>
                     <span>Explore</span>
@@ -45,6 +51,24 @@
                     <span class="icon">⚙️</span>
                     <span>Admin</span>
                 </button>
+            </li>
+            <li class="nav-separator"></li>
+            <li class="settings-wrapper">
+                <button class="nav-btn settings-btn" onclick="toggleSettingsMenu(event)" id="nav-settings" title="Settings">
+                    <span class="dots-icon">⋮</span>
+                </button>
+                <div class="settings-dropdown" id="settings-dropdown">
+                    <button class="settings-item" onclick="resetData(); closeSettingsMenu();">
+                        <span>↺</span> Reset Data
+                    </button>
+                    <button class="settings-item" onclick="toggleThemeMode(); closeSettingsMenu();">
+                        <span>🌙</span> <span id="theme-label">Dark Mode</span>
+                    </button>
+                    <hr class="settings-divider">
+                    <button class="settings-item" onclick="showAbout(); closeSettingsMenu();">
+                        <span>ℹ️</span> About
+                    </button>
+                </div>
             </li>
         </ul>
     </nav>
@@ -57,6 +81,11 @@
             <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle sidebar" id="sidebar-toggle-btn">
                 ◀
             </button>
+
+            <!-- Plans Panel -->
+            <div class="sidebar-panel" id="plans-panel">
+                <!-- Populated by app.js -->
+            </div>
 
             <!-- Explore Panel -->
             <div class="sidebar-panel active" id="explore-panel">

@@ -4,6 +4,7 @@
 // ============================================================
 
 const DB_KEY = 'karnataka_travel_locations';
+const PLANS_DB_KEY = 'karnataka_travel_plans';
 const ADMIN_KEY = 'karnataka_admin_auth';
 const ADMIN_PASSWORD = 'admin123';
 
@@ -55,6 +56,51 @@ const DataStore = {
         return 'loc_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
     },
 
+    // ---------- Plans CRUD ----------
+
+    getAllPlans() {
+        const raw = localStorage.getItem(PLANS_DB_KEY);
+        if (!raw) return [];
+        try {
+            return JSON.parse(raw);
+        } catch {
+            return [];
+        }
+    },
+
+    savePlans(plans) {
+        localStorage.setItem(PLANS_DB_KEY, JSON.stringify(plans));
+    },
+
+    getPlan(id) {
+        return this.getAllPlans().find(p => p.id === id) || null;
+    },
+
+    addPlan(plan) {
+        const plans = this.getAllPlans();
+        plan.id = 'plan_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        plan.createdAt = new Date().toISOString();
+        plans.push(plan);
+        this.savePlans(plans);
+        return plan;
+    },
+
+    updatePlan(id, updates) {
+        const plans = this.getAllPlans();
+        const idx = plans.findIndex(p => p.id === id);
+        if (idx === -1) return null;
+        plans[idx] = { ...plans[idx], ...updates, updatedAt: new Date().toISOString() };
+        this.savePlans(plans);
+        return plans[idx];
+    },
+
+    deletePlan(id) {
+        const plans = this.getAllPlans().filter(p => p.id !== id);
+        this.savePlans(plans);
+    },
+
+    // ---------- Seed Data Handling ----------
+
     // Check if seed data has been loaded
     isSeeded() {
         return localStorage.getItem('karnataka_seeded') === 'true';
@@ -67,6 +113,7 @@ const DataStore = {
     // Reset to seed data
     reset() {
         localStorage.removeItem(DB_KEY);
+        localStorage.removeItem(PLANS_DB_KEY);
         localStorage.removeItem('karnataka_seeded');
         this.seedData();
     }
@@ -382,11 +429,83 @@ const SEED_LOCATIONS = [
     }
 ];
 
+// ---------- Curated Plans Data ----------
+
+const SEED_PLANS = [
+    {
+        id: 'plan_01',
+        title: 'Coastal Escapade',
+        days: '4 Days',
+        theme: 'beach',
+        description: 'Explore the pristine beaches and ancient temples along the stunning Arabian Sea coast.',
+        route: ['seed_003', 'seed_010', 'seed_013'] // Gokarna -> Murdeshwar -> Udupi
+    },
+    {
+        id: 'plan_02',
+        title: 'Heritage Trail',
+        days: '5 Days',
+        theme: 'heritage',
+        description: 'Step back in time through the grand ruins of ancient empires and architectural marvels.',
+        route: ['seed_011', 'seed_001', 'seed_015', 'seed_004'] // Badami -> Hampi -> Belur & Halebidu -> Mysore
+    },
+    {
+        id: 'plan_03',
+        title: 'Wildlife Safari',
+        days: '3 Days',
+        theme: 'wildlife',
+        description: 'Venture into the dense forests of the Nilgiri Biosphere to spot tigers, elephants, and rare birds.',
+        route: ['seed_004', 'seed_008', 'seed_007'] // Mysore (Hub) -> Bandipur -> Kabini
+    },
+    {
+        id: 'plan_04',
+        title: 'Western Ghats Retreat',
+        days: '6 Days',
+        theme: 'nature',
+        description: 'A misty journey through coffee plantations, massive waterfalls, and lush evergreen rainforests.',
+        route: ['seed_002', 'seed_006', 'seed_014', 'seed_005'] // Coorg -> Chikmagalur -> Agumbe -> Jog Falls
+    },
+    {
+        id: 'plan_05',
+        title: 'Adventure & Caves',
+        days: '3 Days',
+        theme: 'nature',
+        description: 'White water rafting in Dandeli followed by a trek to the bizarre limestone rock formations of Yana.',
+        route: ['seed_012', 'seed_016', 'seed_003'] // Dandeli -> Yana -> Gokarna
+    },
+    {
+        id: 'plan_06',
+        title: 'City to Cascades',
+        days: '2 Days',
+        theme: 'heritage',
+        description: 'A quick weekend getaway from the bustling city of Bangalore to the serene Nandi Hills and majestic Shivanasamudra waterfalls.',
+        route: ['seed_017', 'seed_009', 'seed_018'] // Bangalore -> Nandi Hills -> Shivanasamudra
+    },
+    {
+        id: 'plan_07',
+        title: 'Coffee & Carvings',
+        days: '4 Days',
+        theme: 'heritage',
+        description: 'Marvel at the intricate Hoysala architecture before unwinding in the lush coffee estates of Chikmagalur.',
+        route: ['seed_015', 'seed_006', 'seed_013'] // Belur -> Chikmagalur -> Udupi
+    }
+];
+
 // ---------- Seed Data Loader ----------
 
 DataStore.seedData = function () {
-    if (this.isSeeded()) return;
-    this.save(SEED_LOCATIONS);
-    this.markSeeded();
-    console.log('✅ Seeded', SEED_LOCATIONS.length, 'Karnataka locations');
+    const locationsSeeded = this.isSeeded();
+    
+    // Seed locations if not seeded
+    if (!locationsSeeded) {
+        this.save(SEED_LOCATIONS);
+        this.markSeeded();
+        console.log('✅ Seeded', SEED_LOCATIONS.length, 'Karnataka locations');
+    }
+    
+    // Seed plans if they don't exist yet
+    const currentPlans = this.getAllPlans();
+    if (currentPlans.length === 0) {
+        this.savePlans(SEED_PLANS);
+        console.log('✅ Seeded', SEED_PLANS.length, 'curated plans');
+    }
 };

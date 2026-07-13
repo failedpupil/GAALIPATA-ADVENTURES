@@ -7,6 +7,7 @@ let map;
 let markersLayer;
 let geoJsonLayer;
 let markerMap = {};        // locationId -> marker
+let routeLayer = null;     // Polyline for plans
 let clickMode = false;     // For admin click-to-place
 let clickCallback = null;
 
@@ -237,6 +238,61 @@ function flyToLocation(id) {
         const marker = markerMap[id];
         if (marker) marker.openPopup();
     }, 1200);
+}
+
+// ---------- Route Drawing (For Plans) ----------
+
+function drawPlanRoute(planId) {
+    clearPlanRoute(); // Clear existing route if any
+
+    const plans = DataStore.getAllPlans();
+    const plan = plans.find(p => p.id === planId);
+    if (!plan || !plan.route || plan.route.length === 0) return;
+
+    // Collect coordinates for the route
+    const latlngs = [];
+    const validMarkers = [];
+
+    plan.route.forEach(locId => {
+        const loc = DataStore.get(locId);
+        if (loc) {
+            latlngs.push([loc.lat, loc.lng]);
+            const marker = markerMap[locId];
+            if (marker) validMarkers.push(marker);
+        }
+    });
+
+    if (latlngs.length < 2) return; // Need at least 2 points to draw a line
+
+    // Draw Polyline
+    routeLayer = L.polyline(latlngs, {
+        color: '#E8A838', // Accent Gold
+        weight: 4,
+        opacity: 0.8,
+        dashArray: '10, 10', // Dashed line effect
+        lineCap: 'round'
+    }).addTo(map);
+
+    // Fit map bounds to the route
+    map.fitBounds(routeLayer.getBounds(), { padding: [50, 50], duration: 1.5 });
+
+    // Highlight markers on route (optional: close other popups)
+    validMarkers.forEach(m => {
+        // Bring these to front if possible, or add a special class
+        if (m._icon) m._icon.style.filter = 'drop-shadow(0 0 8px rgba(232, 168, 56, 0.8))';
+    });
+}
+
+function clearPlanRoute() {
+    if (routeLayer) {
+        map.removeLayer(routeLayer);
+        routeLayer = null;
+    }
+    
+    // Remove glow from all markers
+    Object.values(markerMap).forEach(m => {
+        if (m._icon) m._icon.style.filter = '';
+    });
 }
 
 // ---------- Click-to-Place Mode ----------

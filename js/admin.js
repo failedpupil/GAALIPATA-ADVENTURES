@@ -4,7 +4,9 @@
 // ============================================================
 
 let adminAuthenticated = false;
+let adminMode = 'locations'; // 'locations' | 'plans'
 let editingLocationId = null;
+let editingPlanId = null;
 
 // ---------- Initialize Admin Panel ----------
 
@@ -54,19 +56,50 @@ function authenticateAdmin() {
     }
 }
 
-// ---------- Admin Dashboard ----------
+// ---------- Admin Dashboard Router ----------
 
 function renderAdminDashboard(panel) {
+    // Inject common header and tabs
+    panel.innerHTML = `
+        <div class="panel-header" style="padding-bottom: 0;">
+            <h2>🔧 Admin Panel</h2>
+            <div class="admin-tabs" style="display: flex; gap: 10px; margin-top: 15px; border-bottom: 1px solid var(--glass-border);">
+                <button class="admin-tab ${adminMode === 'locations' ? 'active' : ''}" onclick="switchAdminMode('locations')" style="background:none; border:none; color: ${adminMode === 'locations' ? 'var(--accent-gold)' : 'var(--text-secondary)'}; padding-bottom: 8px; border-bottom: 2px solid ${adminMode === 'locations' ? 'var(--accent-gold)' : 'transparent'}; cursor:pointer; font-weight: 600;">
+                    📍 Locations
+                </button>
+                <button class="admin-tab ${adminMode === 'plans' ? 'active' : ''}" onclick="switchAdminMode('plans')" style="background:none; border:none; color: ${adminMode === 'plans' ? 'var(--accent-gold)' : 'var(--text-secondary)'}; padding-bottom: 8px; border-bottom: 2px solid ${adminMode === 'plans' ? 'var(--accent-gold)' : 'transparent'}; cursor:pointer; font-weight: 600;">
+                    📋 Plans
+                </button>
+            </div>
+        </div>
+        <div id="admin-content-area" style="padding-top: 15px;"></div>
+    `;
+
+    const contentArea = document.getElementById('admin-content-area');
+    if (adminMode === 'locations') {
+        renderAdminLocationsDashboard(contentArea);
+    } else {
+        renderAdminPlansDashboard(contentArea);
+    }
+}
+
+function switchAdminMode(mode) {
+    adminMode = mode;
+    initAdminPanel();
+}
+
+// ---------- Locations Dashboard ----------
+
+function renderAdminLocationsDashboard(container) {
     const locations = DataStore.getAll();
     const catCounts = {};
     locations.forEach(loc => {
         catCounts[loc.category] = (catCounts[loc.category] || 0) + 1;
     });
 
-    panel.innerHTML = `
-        <div class="panel-header">
-            <h2>🔧 Admin Panel</h2>
-            <p>Manage locations & destinations</p>
+    container.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">Manage map locations & destinations</p>
         </div>
 
         <!-- Stats -->
@@ -112,10 +145,173 @@ function renderAdminDashboard(panel) {
 
         <hr class="divider">
 
-        <button class="btn btn-secondary btn-block btn-sm" onclick="logoutAdmin()" style="margin-top: 8px;">
-            🔒 Lock Admin
+        <button class="btn btn-secondary btn-block btn-sm" onclick="logoutAdmin()" style="margin-top: 15px;">
+            🔒 Logout
         </button>
     `;
+}
+
+// ---------- Plans Dashboard ----------
+
+function renderAdminPlansDashboard(container) {
+    const plans = DataStore.getAllPlans();
+    
+    let plansHtml = plans.length === 0 ? '<div style="text-align:center; padding: 20px; color: var(--text-tertiary);">No plans found. Create one!</div>' : '';
+    
+    plans.forEach(plan => {
+        plansHtml += `
+            <div class="admin-location-item" style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; margin-bottom: 8px;">
+                <div>
+                    <h4 style="margin:0; font-size: 0.9rem;">${plan.title}</h4>
+                    <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;">
+                        ${plan.days} • ${plan.route ? plan.route.length : 0} stops
+                    </div>
+                </div>
+                <div style="display: flex; gap: 5px;">
+                    <button class="btn btn-secondary btn-sm" onclick="openAddPlanForm('${plan.id}')" style="padding: 4px 8px; font-size: 0.8rem;">Edit</button>
+                    <button class="btn btn-secondary btn-sm" onclick="deleteAdminPlan('${plan.id}')" style="padding: 4px 8px; font-size: 0.8rem; color: var(--accent-coral);">Del</button>
+                </div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">Manage curated itineraries</p>
+        </div>
+
+        <button class="btn btn-primary btn-block" onclick="openAddPlanForm()" style="margin-bottom: 20px;">
+            ＋ Add New Plan
+        </button>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+            <h3 style="font-family: var(--font-heading); font-size: 0.95rem; font-weight: 600;">
+                All Plans
+            </h3>
+            <span style="font-size: 0.75rem; color: var(--text-tertiary)">${plans.length} total</span>
+        </div>
+
+        <div id="admin-plan-list">
+            ${plansHtml}
+        </div>
+        
+        <hr class="divider">
+        <button class="btn btn-secondary btn-block btn-sm" onclick="logoutAdmin()" style="margin-top: 15px;">
+            🔒 Logout
+        </button>
+    `;
+}
+
+function openAddPlanForm(planId = null) {
+    editingPlanId = planId;
+    renderPlanForm();
+}
+
+function renderPlanForm() {
+    const container = document.getElementById('admin-content-area');
+    const isEdit = !!editingPlanId;
+    let plan = { title: '', days: '', theme: 'nature', description: '', route: [] };
+    
+    if (isEdit) {
+        plan = DataStore.getPlan(editingPlanId) || plan;
+    }
+
+    const allLocations = DataStore.getAll();
+    const locationOptions = allLocations.map(loc => {
+        const isSelected = plan.route.includes(loc.id);
+        return `
+            <label style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: rgba(0,0,0,0.2); border-radius: 4px; font-size: 0.85rem; cursor: pointer; border: 1px solid ${isSelected ? 'var(--accent-gold)' : 'transparent'}; margin-bottom: 4px;">
+                <input type="checkbox" class="plan-route-checkbox" value="${loc.id}" ${isSelected ? 'checked' : ''} onchange="this.parentElement.style.borderColor = this.checked ? 'var(--accent-gold)' : 'transparent'">
+                ${loc.name} (${loc.district})
+            </label>
+        `;
+    }).join('');
+
+    container.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3 style="margin:0;">${isEdit ? '✏️ Edit Plan' : '📝 New Plan'}</h3>
+            <button class="btn btn-secondary btn-sm" onclick="initAdminPanel()">Cancel</button>
+        </div>
+
+        <div class="form-group">
+            <label>Title</label>
+            <input type="text" id="p-title" class="form-input" placeholder="e.g. Coastal Escapade" value="${plan.title}">
+        </div>
+        
+        <div class="form-group" style="display: flex; gap: 10px;">
+            <div style="flex: 1;">
+                <label>Duration</label>
+                <input type="text" id="p-days" class="form-input" placeholder="e.g. 4 Days" value="${plan.days}">
+            </div>
+            <div style="flex: 1;">
+                <label>Theme</label>
+                <select id="p-theme" class="form-input" style="padding: 10px;">
+                    <option value="beach" ${plan.theme === 'beach' ? 'selected' : ''}>Beach (Blue)</option>
+                    <option value="heritage" ${plan.theme === 'heritage' ? 'selected' : ''}>Heritage (Gold)</option>
+                    <option value="wildlife" ${plan.theme === 'wildlife' ? 'selected' : ''}>Wildlife (Red)</option>
+                    <option value="nature" ${plan.theme === 'nature' ? 'selected' : ''}>Nature (Green)</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label>Description</label>
+            <textarea id="p-description" class="form-input" rows="2" placeholder="Short blurb...">${plan.description}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Route Stops (Select in order)</label>
+            <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-bottom: 8px;">Check the locations to include. The route will be drawn in the order they are selected.</div>
+            <div style="max-height: 200px; overflow-y: auto; padding-right: 5px; border: 1px solid var(--glass-border); padding: 5px; border-radius: 6px;">
+                ${locationOptions}
+            </div>
+        </div>
+
+        <button class="btn btn-primary btn-block" onclick="saveAdminPlan()" style="margin-top: 15px;">
+            ${isEdit ? 'Save Changes' : 'Create Plan'}
+        </button>
+    `;
+}
+
+function saveAdminPlan() {
+    const title = document.getElementById('p-title').value.trim();
+    if (!title) return showToast('Title is required', 'error');
+
+    // Get checked route checkboxes
+    const checkboxes = document.querySelectorAll('.plan-route-checkbox:checked');
+    const route = Array.from(checkboxes).map(cb => cb.value);
+
+    if (route.length < 2) {
+        showToast('Please select at least 2 stops for the route', 'error');
+        return;
+    }
+
+    const planData = {
+        title,
+        days: document.getElementById('p-days').value.trim(),
+        theme: document.getElementById('p-theme').value,
+        description: document.getElementById('p-description').value.trim(),
+        route
+    };
+
+    if (editingPlanId) {
+        DataStore.updatePlan(editingPlanId, planData);
+        showToast('Plan updated', 'success');
+    } else {
+        DataStore.addPlan(planData);
+        showToast('Plan created', 'success');
+    }
+
+    editingPlanId = null;
+    initAdminPanel();
+}
+
+function deleteAdminPlan(id) {
+    if (confirm('Are you sure you want to delete this plan?')) {
+        DataStore.deletePlan(id);
+        showToast('Plan deleted', 'success');
+        initAdminPanel();
+    }
 }
 
 function renderAdminLocationList(locations) {
