@@ -25,9 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Create map legend
     createMapLegend();
 
-    // Set default view
-    switchView('explore');
-
     // Close settings dropdown on outside click
     document.addEventListener('click', (e) => {
         const dropdown = document.getElementById('settings-dropdown');
@@ -40,7 +37,25 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 Gaalipata Adventures initialized');
 });
 
-// ---------- Navigation ----------
+// ---------- Landing Page & Navigation ----------
+
+function enterApp(view) {
+    const overlay = document.getElementById('landing-overlay');
+    if (!overlay) return switchView(view);
+
+    // Initialize the selected view
+    switchView(view);
+
+    // Fade out overlay
+    overlay.classList.add('fade-out');
+
+    // Remove from DOM after animation completes
+    setTimeout(() => {
+        overlay.remove();
+        // Trigger a map resize just in case to fix Leaflet gray tiles issue
+        if (map) map.invalidateSize();
+    }, 600);
+}
 
 function switchView(view) {
     currentView = view;
