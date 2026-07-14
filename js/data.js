@@ -122,14 +122,14 @@ const DataStore = {
 // ---------- Categories & Constants ----------
 
 const CATEGORIES = {
-    heritage: { label: 'Heritage', icon: '🏛️', color: '#E8A838' },
-    beach: { label: 'Beach', icon: '🏖️', color: '#00D4AA' },
-    hillstation: { label: 'Hill Station', icon: '🏔️', color: '#4CAF50' },
-    temple: { label: 'Temple', icon: '🛕', color: '#FF6B6B' },
-    wildlife: { label: 'Wildlife', icon: '🦁', color: '#FF9800' },
-    waterfall: { label: 'Waterfall', icon: '💧', color: '#42A5F5' },
-    adventure: { label: 'Adventure', icon: '🧗', color: '#AB47BC' },
-    city: { label: 'City', icon: '🏙️', color: '#78909C' }
+    heritage: { label: 'Heritage', icon: '<i class="ri-ancient-gate-line"></i>', color: '#E8A838' },
+    beach: { label: 'Beach', icon: '<i class="ri-sun-line"></i>', color: '#00D4AA' },
+    hillstation: { label: 'Hill Station', icon: '<i class="ri-landscape-line"></i>', color: '#4CAF50' },
+    temple: { label: 'Temple', icon: '<i class="ri-building-4-line"></i>', color: '#FF6B6B' },
+    wildlife: { label: 'Wildlife', icon: '<i class="ri-bear-smile-line"></i>', color: '#FF9800' },
+    waterfall: { label: 'Waterfall', icon: '<i class="ri-drop-line"></i>', color: '#42A5F5' },
+    adventure: { label: 'Adventure', icon: '<i class="ri-footprint-line"></i>', color: '#AB47BC' },
+    city: { label: 'City', icon: '<i class="ri-building-2-line"></i>', color: '#78909C' }
 };
 
 const SEASONS = ['Summer', 'Monsoon', 'Winter', 'Year-round'];

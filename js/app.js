@@ -126,7 +126,7 @@ function toggleThemeMode() {
 // ---------- About ----------
 
 function showAbout() {
-    showToast('🗺️ Gaalipata Adventures v1.0 — Discover Karnataka!', 'success');
+    showToast('<i class="ri-compass-discover-line"></i> Gaalipata Adventures v1.0 — Discover Karnataka!', 'success');
 }
 
 // ---------- Plans Panel ----------
@@ -147,13 +147,13 @@ function initPlansPanel() {
 
     panel.innerHTML = `
         <div class="panel-header">
-            <h2>📋 Gaalipata Plans</h2>
+            <h2><i class="ri-route-line"></i> Gaalipata Plans</h2>
             <p>Curated itineraries for your perfect Karnataka adventure</p>
         </div>
 
         <div class="plans-list" style="margin-top: 15px;">
             ${plans.map(plan => {
-                const icon = plan.theme === 'beach' ? '🌊' : plan.theme === 'heritage' ? '🏛️' : plan.theme === 'wildlife' ? '🐅' : '🌿';
+                const icon = plan.theme === 'beach' ? '<i class="ri-sun-line"></i>' : plan.theme === 'heritage' ? '<i class="ri-ancient-gate-line"></i>' : plan.theme === 'wildlife' ? '<i class="ri-bear-smile-line"></i>' : '<i class="ri-leaf-line"></i>';
                 const color = plan.theme === 'beach' ? '#42A5F5' : plan.theme === 'heritage' ? '#E8A838' : plan.theme === 'wildlife' ? '#FF6B6B' : '#00D4AA';
                 
                 return `
@@ -187,7 +187,7 @@ function showPlanDetails(planId) {
     // Draw the route on the map
     if (typeof drawPlanRoute === 'function') drawPlanRoute(planId);
 
-    const icon = plan.theme === 'beach' ? '🌊' : plan.theme === 'heritage' ? '🏛️' : plan.theme === 'wildlife' ? '🐅' : '🌿';
+    const icon = plan.theme === 'beach' ? '<i class="ri-sun-line"></i>' : plan.theme === 'heritage' ? '<i class="ri-ancient-gate-line"></i>' : plan.theme === 'wildlife' ? '<i class="ri-bear-smile-line"></i>' : '<i class="ri-leaf-line"></i>';
     const color = plan.theme === 'beach' ? '#42A5F5' : plan.theme === 'heritage' ? '#E8A838' : plan.theme === 'wildlife' ? '#FF6B6B' : '#00D4AA';
 
     let routeHtml = '';
@@ -220,7 +220,7 @@ function showPlanDetails(planId) {
     panel.innerHTML = `
         <div class="panel-header" style="padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;">
             <button onclick="initPlansPanel()" style="background:none; border:none; color: var(--text-secondary); cursor:pointer; display:flex; align-items:center; gap:5px; font-size:0.9rem; margin-bottom:15px; padding:0;">
-                <span>←</span> Back to Plans
+                <span><i class="ri-arrow-left-line"></i></span> Back to Plans
             </button>
             <h2 style="display:flex; align-items:center; gap:8px;">
                 <span style="color: ${color}">${icon}</span> ${plan.title}
@@ -270,7 +270,7 @@ function showToast(message, type = 'success') {
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
 
-    const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+    const icon = type === 'success' ? '<i class="ri-check-line"></i>' : type === 'error' ? '<i class="ri-close-line"></i>' : '<i class="ri-information-line"></i>';
     toast.innerHTML = `<span>${icon}</span><span>${message}</span>`;
 
     container.appendChild(toast);

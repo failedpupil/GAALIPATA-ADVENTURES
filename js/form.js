@@ -22,18 +22,18 @@ function initFormPanel() {
 
     panel.innerHTML = `
         <div class="panel-header">
-            <h2>🧭 Explore Karnataka</h2>
+            <h2><i class="ri-compass-3-line"></i> Explore Karnataka</h2>
             <p>Tell us your preferences — we'll find the perfect destinations</p>
         </div>
 
         <!-- Season / When -->
         <div class="form-group">
-            <label><span class="label-icon">📅</span> When do you want to travel?</label>
+            <label><span class="label-icon"><i class="ri-calendar-line"></i></span> When do you want to travel?</label>
             <div class="checkbox-group" id="season-filters">
                 ${SEASONS.map(s => `
                     <label class="checkbox-chip" data-value="${s}">
                         <input type="checkbox" value="${s}" onchange="onFilterChange()">
-                        <span>${s === 'Summer' ? '☀️' : s === 'Monsoon' ? '🌧️' : s === 'Winter' ? '❄️' : '🌍'}</span>
+                        <span>${s === 'Summer' ? '<i class="ri-sun-line"></i>' : s === 'Monsoon' ? '<i class="ri-rainy-line"></i>' : s === 'Winter' ? '<i class="ri-snowy-line"></i>' : '<i class="ri-earth-line"></i>'}</span>
                         <span>${s}</span>
                     </label>
                 `).join('')}
@@ -42,7 +42,7 @@ function initFormPanel() {
 
         <!-- Category / Where -->
         <div class="form-group">
-            <label><span class="label-icon">📍</span> What type of place?</label>
+            <label><span class="label-icon"><i class="ri-map-pin-line"></i></span> What type of place?</label>
             <div class="checkbox-group" id="category-filters">
                 ${Object.entries(CATEGORIES).map(([key, cat]) => `
                     <label class="checkbox-chip" data-value="${key}">
@@ -56,7 +56,7 @@ function initFormPanel() {
 
         <!-- District / Multi-select -->
         <div class="form-group">
-            <label><span class="label-icon">🗺️</span> Select District</label>
+            <label><span class="label-icon"><i class="ri-map-2-line"></i></span> Select District</label>
             <div class="district-multiselect" id="district-multiselect">
                 <div class="district-trigger" onclick="toggleDistrictDropdown()">
                     <span class="district-trigger-text" id="district-trigger-text">All Districts</span>
@@ -82,10 +82,10 @@ function initFormPanel() {
 
         <!-- Transport / How -->
         <div class="form-group">
-            <label><span class="label-icon">🚗</span> How will you travel?</label>
+            <label><span class="label-icon"><i class="ri-car-line"></i></span> How will you travel?</label>
             <div class="checkbox-group" id="transport-filters">
                 ${TRANSPORT.map(t => {
-                    const icons = { Car: '🚗', Bus: '🚌', Train: '🚂', Flight: '✈️' };
+                    const icons = { Car: '<i class="ri-car-line"></i>', Bus: '<i class="ri-bus-line"></i>', Train: '<i class="ri-train-line"></i>', Flight: '<i class="ri-flight-takeoff-line"></i>' };
                     return `
                         <label class="checkbox-chip" data-value="${t}">
                             <input type="checkbox" value="${t}" onchange="onFilterChange()">
@@ -99,7 +99,7 @@ function initFormPanel() {
 
         <!-- Budget -->
         <div class="form-group">
-            <label><span class="label-icon">💰</span> Budget (per person)</label>
+            <label><span class="label-icon"><i class="ri-money-dollar-circle-line"></i></span> Budget (per person)</label>
             <div class="range-container">
                 <input type="range" class="range-slider" id="budget-slider"
                        min="500" max="50000" step="500" value="50000"
@@ -114,7 +114,7 @@ function initFormPanel() {
 
         <!-- Duration -->
         <div class="form-group">
-            <label><span class="label-icon">⏱️</span> Duration</label>
+            <label><span class="label-icon"><i class="ri-time-line"></i></span> Duration</label>
             <div class="checkbox-group" id="duration-filters">
                 ${DURATIONS.map(d => `
                     <label class="checkbox-chip" data-value="${d}">
@@ -130,10 +130,10 @@ function initFormPanel() {
         <!-- Action buttons -->
         <div style="display: flex; gap: 8px;">
             <button class="btn btn-primary btn-block" onclick="applyFilters()">
-                🔍 Find Destinations
+                <i class="ri-search-line"></i> Find Destinations
             </button>
             <button class="btn btn-secondary" onclick="clearFilters()" title="Reset">
-                ↺
+                <i class="ri-refresh-line"></i>
             </button>
         </div>
 
@@ -347,7 +347,7 @@ function renderResults(locations) {
     if (locations.length === 0) {
         list.innerHTML = `
             <div class="empty-state">
-                <div class="empty-icon">🔍</div>
+                <div class="empty-icon"><i class="ri-search-line"></i></div>
                 <h3>No destinations found</h3>
                 <p>Try adjusting your filters to discover more places</p>
             </div>

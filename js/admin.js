@@ -26,13 +26,13 @@ function initAdminPanel() {
 function renderAdminGate(panel) {
     panel.innerHTML = `
         <div class="admin-gate">
-            <div class="lock-icon">🔒</div>
+            <div class="lock-icon"><i class="ri-lock-line"></i></div>
             <h3>Admin Access</h3>
             <p>Enter the admin password to manage locations</p>
             <div class="admin-password-group">
                 <input type="password" class="form-input" id="admin-password"
                        placeholder="Password" onkeydown="if(event.key==='Enter')authenticateAdmin()">
-                <button class="btn btn-primary" onclick="authenticateAdmin()">→</button>
+                <button class="btn btn-primary" onclick="authenticateAdmin()"><i class="ri-arrow-right-line"></i></button>
             </div>
             <p style="margin-top: 12px; font-size: 0.7rem; color: var(--text-tertiary)">
                 Default: admin123
@@ -47,10 +47,10 @@ function authenticateAdmin() {
 
     if (input.value === ADMIN_PASSWORD) {
         adminAuthenticated = true;
-        showToast('✅ Admin access granted', 'success');
+        showToast('Admin access granted', 'success');
         initAdminPanel();
     } else {
-        showToast('❌ Wrong password', 'error');
+        showToast('Wrong password', 'error');
         input.value = '';
         input.focus();
     }
@@ -62,13 +62,13 @@ function renderAdminDashboard(panel) {
     // Inject common header and tabs
     panel.innerHTML = `
         <div class="panel-header" style="padding-bottom: 0;">
-            <h2>🔧 Admin Panel</h2>
+            <h2><i class="ri-settings-3-line"></i> Admin Panel</h2>
             <div class="admin-tabs" style="display: flex; gap: 10px; margin-top: 15px; border-bottom: 1px solid var(--glass-border);">
                 <button class="admin-tab ${adminMode === 'locations' ? 'active' : ''}" onclick="switchAdminMode('locations')" style="background:none; border:none; color: ${adminMode === 'locations' ? 'var(--accent-gold)' : 'var(--text-secondary)'}; padding-bottom: 8px; border-bottom: 2px solid ${adminMode === 'locations' ? 'var(--accent-gold)' : 'transparent'}; cursor:pointer; font-weight: 600;">
-                    📍 Locations
+                    <i class="ri-map-pin-line"></i> Locations
                 </button>
                 <button class="admin-tab ${adminMode === 'plans' ? 'active' : ''}" onclick="switchAdminMode('plans')" style="background:none; border:none; color: ${adminMode === 'plans' ? 'var(--accent-gold)' : 'var(--text-secondary)'}; padding-bottom: 8px; border-bottom: 2px solid ${adminMode === 'plans' ? 'var(--accent-gold)' : 'transparent'}; cursor:pointer; font-weight: 600;">
-                    📋 Plans
+                    <i class="ri-route-line"></i> Plans
                 </button>
             </div>
         </div>
@@ -120,7 +120,7 @@ function renderAdminLocationsDashboard(container) {
                 ＋ Add Location
             </button>
             <button class="btn btn-secondary" onclick="resetData()" title="Reset to defaults">
-                ↺
+                <i class="ri-refresh-line"></i>
             </button>
         </div>
 
@@ -135,7 +135,7 @@ function renderAdminLocationsDashboard(container) {
         </div>
 
         <input type="text" class="form-input" id="admin-search"
-               placeholder="🔍 Search locations..."
+               placeholder="Search locations..."
                oninput="filterAdminList(this.value)"
                style="margin-bottom: 12px;">
 
@@ -146,7 +146,7 @@ function renderAdminLocationsDashboard(container) {
         <hr class="divider">
 
         <button class="btn btn-secondary btn-block btn-sm" onclick="logoutAdmin()" style="margin-top: 15px;">
-            🔒 Logout
+            <i class="ri-lock-line"></i> Logout
         </button>
     `;
 }
@@ -197,7 +197,7 @@ function renderAdminPlansDashboard(container) {
         
         <hr class="divider">
         <button class="btn btn-secondary btn-block btn-sm" onclick="logoutAdmin()" style="margin-top: 15px;">
-            🔒 Logout
+            <i class="ri-lock-line"></i> Logout
         </button>
     `;
 }
@@ -229,7 +229,7 @@ function renderPlanForm() {
 
     container.innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <h3 style="margin:0;">${isEdit ? '✏️ Edit Plan' : '📝 New Plan'}</h3>
+            <h3 style="margin:0;">${isEdit ? '<i class="ri-edit-line"></i> Edit Plan' : '<i class="ri-file-add-line"></i> New Plan'}</h3>
             <button class="btn btn-secondary btn-sm" onclick="initAdminPanel()">Cancel</button>
         </div>
 
@@ -318,7 +318,7 @@ function renderAdminLocationList(locations) {
     if (locations.length === 0) {
         return `
             <div class="empty-state">
-                <div class="empty-icon">📍</div>
+                <div class="empty-icon"><i class="ri-map-pin-line"></i></div>
                 <h3>No locations yet</h3>
                 <p>Click "Add Location" to get started</p>
             </div>
@@ -336,10 +336,10 @@ function renderAdminLocationList(locations) {
                 </div>
                 <div class="item-actions">
                     <button class="btn btn-secondary btn-icon btn-sm" onclick="openEditLocationForm('${loc.id}')" title="Edit">
-                        ✏️
+                        <i class="ri-edit-line"></i>
                     </button>
                     <button class="btn btn-danger btn-icon btn-sm" onclick="deleteLocation('${loc.id}')" title="Delete">
-                        🗑️
+                        <i class="ri-delete-bin-line"></i>
                     </button>
                 </div>
             </div>
@@ -386,7 +386,7 @@ function showLocationFormModal(loc) {
 
     overlay.innerHTML = `
         <div class="admin-form-modal">
-            <h3>${isEdit ? '✏️ Edit' : '📍 Add'} Location</h3>
+            <h3>${isEdit ? '<i class="ri-edit-line"></i> Edit' : '<i class="ri-map-pin-add-line"></i> Add'} Location</h3>
 
             <div class="form-group">
                 <label>Location Name</label>
@@ -425,7 +425,7 @@ function showLocationFormModal(loc) {
                     </div>
                 </div>
                 <button class="btn btn-secondary btn-sm" style="margin-top: 8px;" onclick="startPickLocation()">
-                    📌 Pick on Map
+                    <i class="ri-map-pin-add-line"></i> Pick on Map
                 </button>
             </div>
 
@@ -445,7 +445,7 @@ function showLocationFormModal(loc) {
                 <label>Transport Options</label>
                 <div class="checkbox-group">
                     ${TRANSPORT.map(t => {
-                        const icons = { Car: '🚗', Bus: '🚌', Train: '🚂', Flight: '✈️' };
+                        const icons = { Car: '<i class="ri-car-line"></i>', Bus: '<i class="ri-bus-line"></i>', Train: '<i class="ri-train-line"></i>', Flight: '<i class="ri-flight-takeoff-line"></i>' };
                         return `
                             <label class="checkbox-chip ${(loc.transport || []).includes(t) ? 'checked' : ''}" data-value="${t}">
                                 <input type="checkbox" name="loc-transport" value="${t}" ${(loc.transport || []).includes(t) ? 'checked' : ''}>

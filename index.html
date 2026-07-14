@@ -13,6 +13,9 @@
           integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
           crossorigin="" />
 
+    <!-- Icons — Remix Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
 
@@ -24,13 +27,14 @@
     <!-- ================ LANDING OVERLAY ================ -->
     <div id="landing-overlay" class="landing-overlay">
         <div class="landing-card">
-            <div class="landing-logo">🗺️</div>
+            <div class="landing-logo"><i class="ri-compass-discover-line"></i></div>
             <h1 class="landing-title">GAALIPATA <span>ADVENTURES</span></h1>
             <p class="landing-subtitle">Discover the hidden gems of Karnataka</p>
+            <p class="landing-tagline">From the misty hills of Coorg to the ancient ruins of Hampi</p>
             
             <div class="landing-options">
                 <button class="landing-btn" onclick="enterApp('plans')">
-                    <span class="l-icon">📋</span>
+                    <span class="l-icon"><i class="ri-route-line"></i></span>
                     <div class="l-text">
                         <strong>Gaalipata Plans</strong>
                         <small>Curated Map Itineraries</small>
@@ -38,7 +42,7 @@
                 </button>
                 
                 <button class="landing-btn primary" onclick="enterApp('explore')">
-                    <span class="l-icon">🧭</span>
+                    <span class="l-icon"><i class="ri-compass-3-line"></i></span>
                     <div class="l-text">
                         <strong>Explore Karnataka</strong>
                         <small>Interactive Map & Filters</small>
@@ -46,13 +50,15 @@
                 </button>
                 
                 <button class="landing-btn" onclick="enterApp('admin')">
-                    <span class="l-icon">⚙️</span>
+                    <span class="l-icon"><i class="ri-shield-keyhole-line"></i></span>
                     <div class="l-text">
                         <strong>Admin Portal</strong>
                         <small>Manage Locations & Plans</small>
                     </div>
                 </button>
             </div>
+            
+            <p class="landing-credit">Handcrafted with care for Karnataka explorers</p>
         </div>
     </div>
 
@@ -62,7 +68,7 @@
     <!-- ================ NAVBAR ================ -->
     <nav class="navbar" id="main-navbar">
         <a href="#" class="navbar-brand" onclick="event.preventDefault()">
-            <div class="logo-icon">🗺️</div>
+            <div class="logo-icon"><i class="ri-compass-discover-line"></i></div>
             <div>
                 <div class="brand-text">GAALIPATA</div>
                 <div class="brand-sub">ADVENTURES</div>
@@ -71,19 +77,19 @@
         <ul class="navbar-nav">
             <li>
                 <button class="nav-btn" data-view="plans" onclick="switchView('plans')" id="nav-plans">
-                    <span class="icon">📋</span>
+                    <span class="icon"><i class="ri-route-line"></i></span>
                     <span>Gaalipata Plans</span>
                 </button>
             </li>
             <li>
                 <button class="nav-btn active" data-view="explore" onclick="switchView('explore')" id="nav-explore">
-                    <span class="icon">🧭</span>
+                    <span class="icon"><i class="ri-compass-3-line"></i></span>
                     <span>Explore</span>
                 </button>
             </li>
             <li>
                 <button class="nav-btn" data-view="admin" onclick="switchView('admin')" id="nav-admin">
-                    <span class="icon">⚙️</span>
+                    <span class="icon"><i class="ri-settings-3-line"></i></span>
                     <span>Admin</span>
                 </button>
             </li>
@@ -94,14 +100,14 @@
                 </button>
                 <div class="settings-dropdown" id="settings-dropdown">
                     <button class="settings-item" onclick="resetData(); closeSettingsMenu();">
-                        <span>↺</span> Reset Data
+                        <span><i class="ri-refresh-line"></i></span> Reset Data
                     </button>
                     <button class="settings-item" onclick="toggleThemeMode(); closeSettingsMenu();">
-                        <span>🌙</span> <span id="theme-label">Dark Mode</span>
+                        <span><i class="ri-moon-line"></i></span> <span id="theme-label">Dark Mode</span>
                     </button>
                     <hr class="settings-divider">
                     <button class="settings-item" onclick="showAbout(); closeSettingsMenu();">
-                        <span>ℹ️</span> About
+                        <span><i class="ri-information-line"></i></span> About
                     </button>
                 </div>
             </li>
@@ -146,7 +152,7 @@
 
             <!-- Click mode indicator -->
             <div class="map-click-mode" id="click-mode-indicator">
-                📌 Click on the map to place a marker
+                <i class="ri-map-pin-add-line"></i> Click on the map to place a marker
             </div>
 
             <!-- Map Legend -->

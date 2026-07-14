@@ -189,7 +189,7 @@ function createPopupContent(loc) {
     ).join('');
 
     const transportTags = (loc.transport || []).map(t => {
-        const icons = { Car: '🚗', Bus: '🚌', Train: '🚂', Flight: '✈️' };
+        const icons = { Car: '<i class="ri-car-line"></i>', Bus: '<i class="ri-bus-line"></i>', Train: '<i class="ri-train-line"></i>', Flight: '<i class="ri-flight-takeoff-line"></i>' };
         return `<span class="meta-tag">${icons[t] || ''} ${t}</span>`;
     }).join('');
 
@@ -209,7 +209,7 @@ function createPopupContent(loc) {
             </div>
             <div class="popup-card-body">
                 <h3>${loc.name}</h3>
-                <div class="district">📍 ${loc.district}</div>
+                <div class="district"><i class="ri-map-pin-2-line"></i> ${loc.district}</div>
                 <p class="description">${loc.description || 'A beautiful destination in Karnataka.'}</p>
                 <div class="popup-meta">
                     ${seasonTags}
