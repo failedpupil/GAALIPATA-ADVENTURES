@@ -537,62 +537,6 @@ const SEED_LOCATIONS = [
 
 const SEED_PLANS = [
     {
-        id: 'plan_01',
-        title: 'Coastal Escapade',
-        days: '4 Days',
-        theme: 'beach',
-        description: 'Explore the pristine beaches and ancient temples along the stunning Arabian Sea coast.',
-        route: ['seed_003', 'seed_010', 'seed_013'] // Gokarna -> Murdeshwar -> Udupi
-    },
-    {
-        id: 'plan_02',
-        title: 'Heritage Trail',
-        days: '5 Days',
-        theme: 'heritage',
-        description: 'Step back in time through the grand ruins of ancient empires and architectural marvels.',
-        route: ['seed_011', 'seed_001', 'seed_015', 'seed_004'] // Badami -> Hampi -> Belur & Halebidu -> Mysore
-    },
-    {
-        id: 'plan_03',
-        title: 'Wildlife Safari',
-        days: '3 Days',
-        theme: 'wildlife',
-        description: 'Venture into the dense forests of the Nilgiri Biosphere to spot tigers, elephants, and rare birds.',
-        route: ['seed_004', 'seed_008', 'seed_007'] // Mysore (Hub) -> Bandipur -> Kabini
-    },
-    {
-        id: 'plan_04',
-        title: 'Western Ghats Retreat',
-        days: '6 Days',
-        theme: 'nature',
-        description: 'A misty journey through coffee plantations, massive waterfalls, and lush evergreen rainforests.',
-        route: ['seed_002', 'seed_006', 'seed_014', 'seed_005'] // Coorg -> Chikmagalur -> Agumbe -> Jog Falls
-    },
-    {
-        id: 'plan_05',
-        title: 'Adventure & Caves',
-        days: '3 Days',
-        theme: 'nature',
-        description: 'White water rafting in Dandeli followed by a trek to the bizarre limestone rock formations of Yana.',
-        route: ['seed_012', 'seed_016', 'seed_003'] // Dandeli -> Yana -> Gokarna
-    },
-    {
-        id: 'plan_06',
-        title: 'City to Cascades',
-        days: '2 Days',
-        theme: 'heritage',
-        description: 'A quick weekend getaway from the bustling city of Bangalore to the serene Nandi Hills and majestic Shivanasamudra waterfalls.',
-        route: ['seed_017', 'seed_009', 'seed_018'] // Bangalore -> Nandi Hills -> Shivanasamudra
-    },
-    {
-        id: 'plan_07',
-        title: 'Coffee & Carvings',
-        days: '4 Days',
-        theme: 'heritage',
-        description: 'Marvel at the intricate Hoysala architecture before unwinding in the lush coffee estates of Chikmagalur.',
-        route: ['seed_015', 'seed_006', 'seed_013'] // Belur -> Chikmagalur -> Udupi
-    },
-    {
         id: 'plan_08',
         title: 'Gaalipata Adventures Plan',
         days: '2 Days',
