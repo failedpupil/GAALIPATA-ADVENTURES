@@ -599,8 +599,8 @@ const SEED_PLANS = [
         theme: 'adventure',
         description: 'A packed 2-day adventure covering historical forts, hidden waterfalls, movie shooting spots, and ancient temples. (25/07 - 26/07)',
         route: [
-            'seed_019', 'seed_020', 'seed_021', 'seed_022', 'seed_023', 'seed_024', 'seed_025', 
-            'seed_026', 'seed_027', 'seed_028', 'seed_029', 'seed_030', 'seed_031'
+            'seed_017', 'seed_019', 'seed_020', 'seed_021', 'seed_022', 'seed_023', 'seed_024', 'seed_025', 
+            'seed_026', 'seed_027', 'seed_028', 'seed_029', 'seed_030', 'seed_031', 'seed_017'
         ]
     }
 ];
