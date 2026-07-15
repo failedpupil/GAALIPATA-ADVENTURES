@@ -250,42 +250,48 @@ function drawPlanRoute(planId) {
     if (!plan || !plan.route || plan.route.length === 0) return;
 
     // Collect coordinates for the route
-    const latlngs = [];
+    const waypoints = [];
     const validMarkers = [];
 
     plan.route.forEach(locId => {
         const loc = DataStore.get(locId);
         if (loc) {
-            latlngs.push([loc.lat, loc.lng]);
+            waypoints.push(L.latLng(loc.lat, loc.lng));
             const marker = markerMap[locId];
             if (marker) validMarkers.push(marker);
         }
     });
 
-    if (latlngs.length < 2) return; // Need at least 2 points to draw a line
+    if (waypoints.length < 2) return; // Need at least 2 points to draw a line
 
-    // Draw Polyline
-    routeLayer = L.polyline(latlngs, {
-        color: '#E8A838', // Accent Gold
-        weight: 4,
-        opacity: 0.8,
-        dashArray: '10, 10', // Dashed line effect
-        lineCap: 'round'
+    // Draw route with Leaflet Routing Machine
+    routeLayer = L.Routing.control({
+        waypoints: waypoints,
+        lineOptions: {
+            styles: [{ color: '#E8A838', opacity: 0.9, weight: 5 }]
+        },
+        createMarker: function() { return null; }, // Hide default markers
+        show: false, // Hide turn-by-turn instructions
+        addWaypoints: false, // Disable dragging to add points
+        routeWhileDragging: false,
+        fitSelectedRoutes: true,
+        showAlternatives: false
     }).addTo(map);
-
-    // Fit map bounds to the route
-    map.fitBounds(routeLayer.getBounds(), { padding: [50, 50], duration: 1.5 });
 
     // Highlight markers on route (optional: close other popups)
     validMarkers.forEach(m => {
         // Bring these to front if possible, or add a special class
-        if (m._icon) m._icon.style.filter = 'drop-shadow(0 0 8px rgba(232, 168, 56, 0.8))';
+        if (m._icon) m._icon.style.filter = 'drop-shadow(0 0 12px rgba(232, 168, 56, 1))';
     });
 }
 
 function clearPlanRoute() {
     if (routeLayer) {
-        map.removeLayer(routeLayer);
+        if (routeLayer instanceof L.Routing.Control) {
+            map.removeControl(routeLayer);
+        } else {
+            map.removeLayer(routeLayer); // Fallback for any old polylines
+        }
         routeLayer = null;
     }
     

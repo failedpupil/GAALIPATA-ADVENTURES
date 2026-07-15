@@ -1977,3 +1977,25 @@ body {
     transform: translateY(0);
     transition: opacity 0.3s ease, transform 0.3s ease;
 }
+
+/* ---------- Custom Logo Styles ---------- */
+.logo-img {
+    width: 120px;
+    height: 120px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    object-fit: cover;
+}
+
+.logo-img-small {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+    object-fit: cover;
+}
+
+/* ---------- Map overrides ---------- */
+.leaflet-routing-container {
+    display: none !important;
+}
