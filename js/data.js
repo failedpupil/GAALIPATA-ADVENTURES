@@ -426,6 +426,110 @@ const SEED_LOCATIONS = [
         rating: 4,
         highlights: ['Gaganachukki Falls', 'Bharachukki Falls', 'Coracle Ride', 'Historic Power Station'],
         image: ''
+    },
+    {
+        id: 'seed_019',
+        name: 'Kavaledurga',
+        lat: 13.7147, lng: 75.1209, district: 'Shimoga', category: 'heritage',
+        description: 'An ancient hill fort in the Western Ghats known for its scenic views and historical ruins.',
+        bestSeasons: ['Monsoon', 'Winter'], transport: ['Car'], estimatedCost: 1000, duration: 'Day trip', rating: 4,
+        highlights: ['Hill Fort', 'Stone Walls', 'Trekking', 'Scenic Views'], image: ''
+    },
+    {
+        id: 'seed_020',
+        name: 'Halige (Handi hodiyo jaaga)',
+        lat: 13.7000, lng: 75.1000, district: 'Shimoga', category: 'adventure',
+        description: 'A beautiful and adventurous spot nestled in the dense forests of the Western Ghats.',
+        bestSeasons: ['Winter'], transport: ['Car'], estimatedCost: 500, duration: 'Day trip', rating: 3,
+        highlights: ['Forest Trails', 'Nature Walk'], image: ''
+    },
+    {
+        id: 'seed_021',
+        name: 'Talasi abbi Falls (Hidden falls)',
+        lat: 13.7088, lng: 75.0560, district: 'Shimoga', category: 'waterfall',
+        description: 'A pristine hidden waterfall surrounded by lush greenery, perfect for nature enthusiasts.',
+        bestSeasons: ['Monsoon', 'Winter'], transport: ['Car'], estimatedCost: 500, duration: 'Day trip', rating: 4,
+        highlights: ['Hidden Waterfall', 'Jungle Trek'], image: ''
+    },
+    {
+        id: 'seed_022',
+        name: 'Kupparagundi falls',
+        lat: 13.6900, lng: 75.0300, district: 'Shimoga', category: 'waterfall',
+        description: 'A serene waterfall offering a peaceful escape into nature. (Visit if time permits)',
+        bestSeasons: ['Monsoon'], transport: ['Car'], estimatedCost: 500, duration: 'Day trip', rating: 3,
+        highlights: ['Waterfall', 'Photography'], image: ''
+    },
+    {
+        id: 'seed_023',
+        name: 'Paramathma Movie Shooting Spot',
+        lat: 13.6800, lng: 75.0100, district: 'Shimoga', category: 'adventure',
+        description: 'The scenic location where the Kannada blockbuster Paramathma was shot.',
+        bestSeasons: ['Year-round'], transport: ['Car'], estimatedCost: 0, duration: 'Day trip', rating: 4,
+        highlights: ['Movie Location', 'Scenic Beauty'], image: ''
+    },
+    {
+        id: 'seed_024',
+        name: 'Thombattu Falls (Kantara Movie Falls)',
+        lat: 13.6288, lng: 74.9221, district: 'Udupi', category: 'waterfall',
+        description: 'The majestic waterfall featured in the blockbuster movie Kantara.',
+        bestSeasons: ['Monsoon', 'Winter'], transport: ['Car'], estimatedCost: 500, duration: 'Day trip', rating: 5,
+        highlights: ['Kantara Location', 'Waterfall', 'Nature'], image: ''
+    },
+    {
+        id: 'seed_025',
+        name: 'Kamalashile Sri Durgaparameshwari',
+        lat: 13.6826, lng: 74.9080, district: 'Udupi', category: 'temple',
+        description: 'A revered temple dedicated to Goddess Durgaparameshwari, located on the banks of the Kubja river. (Day 1 Stay)',
+        bestSeasons: ['Year-round'], transport: ['Car', 'Bus'], estimatedCost: 1500, duration: 'Overnight', rating: 5,
+        highlights: ['Ancient Temple', 'River Kubja', 'Cave'], image: ''
+    },
+    {
+        id: 'seed_026',
+        name: 'Keshavanatheshwara Temple',
+        lat: 13.7300, lng: 74.8900, district: 'Udupi', category: 'temple',
+        description: 'An ancient temple known for its spiritual significance and peaceful environment. Visited by Rishabh Shetty.',
+        bestSeasons: ['Year-round'], transport: ['Car'], estimatedCost: 0, duration: 'Day trip', rating: 4,
+        highlights: ['Ancient Architecture', 'Spiritual Retreat'], image: ''
+    },
+    {
+        id: 'seed_027',
+        name: 'Belkal Theertha falls',
+        lat: 13.7844, lng: 74.8870, district: 'Udupi', category: 'waterfall',
+        description: 'A spectacular waterfall located near Karnataka\'s most beautiful village, surrounded by dense forests.',
+        bestSeasons: ['Monsoon', 'Winter'], transport: ['Car'], estimatedCost: 500, duration: 'Day trip', rating: 5,
+        highlights: ['Beautiful Village', 'Forest Trek', 'Waterfall'], image: ''
+    },
+    {
+        id: 'seed_028',
+        name: 'Kollur Mookambika Temple',
+        lat: 13.8654, lng: 74.8143, district: 'Udupi', category: 'temple',
+        description: 'One of the most prominent pilgrimage centers in South India, nestled in the foothills of the Western Ghats.',
+        bestSeasons: ['Year-round'], transport: ['Car', 'Bus'], estimatedCost: 1000, duration: 'Day trip', rating: 5,
+        highlights: ['Mookambika Temple', 'Kodachadri View', 'Pilgrimage'], image: ''
+    },
+    {
+        id: 'seed_029',
+        name: 'Champaka Sarasi',
+        lat: 13.9000, lng: 74.8500, district: 'Udupi', category: 'heritage',
+        description: 'An ancient stepwell/pond with rich historical significance.',
+        bestSeasons: ['Winter'], transport: ['Car'], estimatedCost: 200, duration: 'Day trip', rating: 3,
+        highlights: ['Historical Stepwell', 'Architecture'], image: ''
+    },
+    {
+        id: 'seed_030',
+        name: 'Malgudi days Museum',
+        lat: 14.0416, lng: 75.2530, district: 'Shimoga', category: 'heritage',
+        description: 'A museum dedicated to the classic TV series Malgudi Days, located at the Arasalu railway station.',
+        bestSeasons: ['Year-round'], transport: ['Car', 'Train'], estimatedCost: 300, duration: 'Day trip', rating: 4,
+        highlights: ['Malgudi Days', 'Railway Station', 'Nostalgia'], image: ''
+    },
+    {
+        id: 'seed_031',
+        name: 'Guli Guli Shankara Temple',
+        lat: 13.8821, lng: 75.0296, district: 'Shimoga', category: 'temple',
+        description: 'A beautiful temple dedicated to Lord Shiva, surrounded by nature. (Visit if time permits)',
+        bestSeasons: ['Year-round'], transport: ['Car'], estimatedCost: 0, duration: 'Day trip', rating: 4,
+        highlights: ['Shiva Temple', 'Peaceful'], image: ''
     }
 ];
 
@@ -487,6 +591,17 @@ const SEED_PLANS = [
         theme: 'heritage',
         description: 'Marvel at the intricate Hoysala architecture before unwinding in the lush coffee estates of Chikmagalur.',
         route: ['seed_015', 'seed_006', 'seed_013'] // Belur -> Chikmagalur -> Udupi
+    },
+    {
+        id: 'plan_08',
+        title: 'Gaalipata Adventures Plan',
+        days: '2 Days',
+        theme: 'adventure',
+        description: 'A packed 2-day adventure covering historical forts, hidden waterfalls, movie shooting spots, and ancient temples. (25/07 - 26/07)',
+        route: [
+            'seed_019', 'seed_020', 'seed_021', 'seed_022', 'seed_023', 'seed_024', 'seed_025', 
+            'seed_026', 'seed_027', 'seed_028', 'seed_029', 'seed_030', 'seed_031'
+        ]
     }
 ];
 
