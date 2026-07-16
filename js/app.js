@@ -187,6 +187,12 @@ function showPlanDetails(planId) {
     // Draw the route on the map
     if (typeof drawPlanRoute === 'function') drawPlanRoute(planId);
 
+    // Update recommendation bar to only show places in this plan
+    if (typeof updateRecommendationBar === 'function') {
+        const planLocations = plan.route.map(id => DataStore.get(id)).filter(Boolean);
+        updateRecommendationBar(planLocations);
+    }
+
     const icon = plan.theme === 'beach' ? '<i class="ri-sun-line"></i>' : plan.theme === 'heritage' ? '<i class="ri-ancient-gate-line"></i>' : plan.theme === 'wildlife' ? '<i class="ri-bear-smile-line"></i>' : '<i class="ri-leaf-line"></i>';
     const color = plan.theme === 'beach' ? '#42A5F5' : plan.theme === 'heritage' ? '#E8A838' : plan.theme === 'wildlife' ? '#FF6B6B' : '#00D4AA';
 
