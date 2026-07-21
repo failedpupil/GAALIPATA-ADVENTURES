@@ -158,7 +158,7 @@ function initPlansPanel() {
                 const hasPdf = !!plan.pdfData;
                 
                 return `
-                    <div class="location-card" onclick="showPlanDetails('${plan.id}')" style="cursor:pointer; border-left: 4px solid ${color};">
+                    <div class="location-card" onclick="showPlanDetails('${plan.id}')" style="cursor:pointer; border-left: 4px solid ${color}; position: relative;">
                         <div class="card-icon" style="background: ${color}15; color: ${color}; font-size: 1.5rem;">
                             ${icon}
                         </div>
@@ -172,6 +172,11 @@ function initPlansPanel() {
                             <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px; line-height: 1.3;">
                                 ${plan.description}
                             </p>
+                            ${hasPdf ? `
+                                <button onclick="event.stopPropagation(); downloadPlanPdf('${plan.id}')" style="margin-top: 10px; background: rgba(255,107,107,0.15); border: 1px solid rgba(255,107,107,0.3); color: #fff; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s;">
+                                    <i class="ri-download-2-line" style="color: var(--accent-coral);"></i> Download PDF
+                                </button>
+                            ` : ''}
                         </div>
                     </div>
                 `;
