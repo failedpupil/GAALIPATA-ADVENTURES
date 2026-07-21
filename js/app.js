@@ -155,6 +155,7 @@ function initPlansPanel() {
             ${plans.map(plan => {
                 const icon = plan.theme === 'beach' ? '<i class="ri-sun-line"></i>' : plan.theme === 'heritage' ? '<i class="ri-ancient-gate-line"></i>' : plan.theme === 'wildlife' ? '<i class="ri-bear-smile-line"></i>' : '<i class="ri-leaf-line"></i>';
                 const color = plan.theme === 'beach' ? '#42A5F5' : plan.theme === 'heritage' ? '#E8A838' : plan.theme === 'wildlife' ? '#FF6B6B' : '#00D4AA';
+                const hasPdf = !!plan.pdfData;
                 
                 return `
                     <div class="location-card" onclick="showPlanDetails('${plan.id}')" style="cursor:pointer; border-left: 4px solid ${color};">
@@ -166,6 +167,7 @@ function initPlansPanel() {
                             <div class="card-meta">
                                 <span style="color: ${color}">${plan.days}</span>
                                 <span>${plan.route.length} stops</span>
+                                ${hasPdf ? '<span style="color: var(--accent-coral);"><i class="ri-file-pdf-2-line"></i> PDF</span>' : ''}
                             </div>
                             <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px; line-height: 1.3;">
                                 ${plan.description}
@@ -223,6 +225,18 @@ function showPlanDetails(planId) {
         `;
     });
 
+    // PDF download button
+    const pdfButtonHtml = plan.pdfData ? `
+        <button class="btn-download-pdf" onclick="downloadPlanPdf('${plan.id}')">
+            <i class="ri-file-pdf-2-line"></i>
+            <div>
+                <div style="font-weight: 600;">Download Plan Details</div>
+                <div style="font-size: 0.72rem; opacity: 0.7; margin-top: 1px;">${plan.pdfName || 'plan-details.pdf'}</div>
+            </div>
+            <i class="ri-download-2-line" style="margin-left: auto; font-size: 1.2rem;"></i>
+        </button>
+    ` : '';
+
     panel.innerHTML = `
         <div class="panel-header" style="padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;">
             <button onclick="initPlansPanel()" style="background:none; border:none; color: var(--text-secondary); cursor:pointer; display:flex; align-items:center; gap:5px; font-size:0.9rem; margin-bottom:15px; padding:0;">
@@ -235,6 +249,7 @@ function showPlanDetails(planId) {
                 <span style="font-size: 0.85rem; background: ${color}22; color: ${color}; padding: 2px 8px; border-radius: 12px;">${plan.days}</span>
                 <span style="font-size: 0.85rem; color: var(--text-tertiary);">${plan.route.length} Destinations</span>
             </div>
+            ${pdfButtonHtml}
         </div>
 
         <div class="plan-route-timeline">
@@ -243,7 +258,25 @@ function showPlanDetails(planId) {
     `;
 }
 
-// ---------- Background Particles ----------
+// ---------- Download Plan PDF ----------
+
+function downloadPlanPdf(planId) {
+    const plan = DataStore.getPlan(planId);
+    if (!plan || !plan.pdfData) {
+        showToast('No PDF available for this plan', 'error');
+        return;
+    }
+
+    // Create a temporary download link
+    const link = document.createElement('a');
+    link.href = plan.pdfData;
+    link.download = plan.pdfName || `${plan.title.replace(/\s+/g, '_')}_details.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    showToast(`📥 Downloading "${link.download}"`, 'success');
+}
 
 function createParticles() {
     const container = document.querySelector('.bg-animation');

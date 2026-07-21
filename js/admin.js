@@ -159,12 +159,14 @@ function renderAdminPlansDashboard(container) {
     let plansHtml = plans.length === 0 ? '<div style="text-align:center; padding: 20px; color: var(--text-tertiary);">No plans found. Create one!</div>' : '';
     
     plans.forEach(plan => {
+        const hasPdf = !!plan.pdfData;
         plansHtml += `
             <div class="admin-location-item" style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; margin-bottom: 8px;">
                 <div>
                     <h4 style="margin:0; font-size: 0.9rem;">${plan.title}</h4>
                     <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;">
                         ${plan.days} • ${plan.route ? plan.route.length : 0} stops
+                        ${hasPdf ? '<span style="color: var(--accent-teal); margin-left: 6px;"><i class="ri-file-pdf-2-line"></i> PDF</span>' : ''}
                     </div>
                 </div>
                 <div style="display: flex; gap: 5px;">
@@ -204,6 +206,10 @@ function renderAdminPlansDashboard(container) {
 
 function openAddPlanForm(planId = null) {
     editingPlanId = planId;
+    // Reset pending PDF state when opening form
+    _pendingPdfData = null;
+    _pendingPdfName = null;
+    _pdfRemoved = false;
     renderPlanForm();
 }
 
@@ -267,10 +273,108 @@ function renderPlanForm() {
             </div>
         </div>
 
+        <div class="form-group">
+            <label><i class="ri-file-pdf-2-line"></i> Plan Details PDF</label>
+            <div class="pdf-upload-area" id="pdf-upload-area">
+                ${plan.pdfData ? `
+                    <div class="pdf-upload-status uploaded">
+                        <i class="ri-file-pdf-2-line" style="font-size: 1.8rem; color: var(--accent-coral);"></i>
+                        <div>
+                            <div style="font-weight: 600; font-size: 0.9rem;">${plan.pdfName || 'plan-details.pdf'}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 2px;">PDF uploaded ✓</div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm" onclick="removePlanPdf()" style="margin-left: auto; padding: 4px 10px; font-size: 0.75rem; color: var(--accent-coral);">
+                            <i class="ri-delete-bin-line"></i> Remove
+                        </button>
+                    </div>
+                ` : `
+                    <div class="pdf-upload-status empty">
+                        <i class="ri-upload-cloud-2-line" style="font-size: 2rem; color: var(--text-tertiary);"></i>
+                        <div style="font-size: 0.85rem; color: var(--text-secondary);">Upload a PDF with plan details</div>
+                        <div style="font-size: 0.72rem; color: var(--text-tertiary);">Customers can download this</div>
+                    </div>
+                `}
+                <input type="file" id="p-pdf" accept=".pdf" style="display:none;" onchange="handlePlanPdfUpload(event)">
+                <button class="btn btn-secondary btn-sm" onclick="document.getElementById('p-pdf').click()" style="margin-top: 10px; width: 100%;">
+                    <i class="ri-upload-2-line"></i> ${plan.pdfData ? 'Replace PDF' : 'Choose PDF File'}
+                </button>
+            </div>
+        </div>
+
         <button class="btn btn-primary btn-block" onclick="saveAdminPlan()" style="margin-top: 15px;">
             ${isEdit ? 'Save Changes' : 'Create Plan'}
         </button>
     `;
+}
+
+// Temporary storage for PDF data during form editing
+let _pendingPdfData = null;
+let _pendingPdfName = null;
+let _pdfRemoved = false;
+
+function handlePlanPdfUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (file.type !== 'application/pdf') {
+        showToast('Please upload a PDF file', 'error');
+        event.target.value = '';
+        return;
+    }
+
+    // 10MB limit for localStorage safety
+    if (file.size > 10 * 1024 * 1024) {
+        showToast('PDF must be under 10MB', 'error');
+        event.target.value = '';
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        _pendingPdfData = e.target.result;
+        _pendingPdfName = file.name;
+        _pdfRemoved = false;
+
+        // Update UI to show uploaded status
+        const area = document.getElementById('pdf-upload-area');
+        if (area) {
+            area.querySelector('.pdf-upload-status').outerHTML = `
+                <div class="pdf-upload-status uploaded">
+                    <i class="ri-file-pdf-2-line" style="font-size: 1.8rem; color: var(--accent-coral);"></i>
+                    <div>
+                        <div style="font-weight: 600; font-size: 0.9rem;">${file.name}</div>
+                        <div style="font-size: 0.75rem; color: var(--accent-teal); margin-top: 2px;">Ready to save ✓</div>
+                    </div>
+                    <button class="btn btn-secondary btn-sm" onclick="removePlanPdf()" style="margin-left: auto; padding: 4px 10px; font-size: 0.75rem; color: var(--accent-coral);">
+                        <i class="ri-delete-bin-line"></i> Remove
+                    </button>
+                </div>
+            `;
+        }
+        showToast(`📄 "${file.name}" loaded`, 'success');
+    };
+    reader.readAsDataURL(file);
+}
+
+function removePlanPdf() {
+    _pendingPdfData = null;
+    _pendingPdfName = null;
+    _pdfRemoved = true;
+
+    const area = document.getElementById('pdf-upload-area');
+    if (area) {
+        area.querySelector('.pdf-upload-status').outerHTML = `
+            <div class="pdf-upload-status empty">
+                <i class="ri-upload-cloud-2-line" style="font-size: 2rem; color: var(--text-tertiary);"></i>
+                <div style="font-size: 0.85rem; color: var(--text-secondary);">Upload a PDF with plan details</div>
+                <div style="font-size: 0.72rem; color: var(--text-tertiary);">Customers can download this</div>
+            </div>
+        `;
+    }
+    // Reset file input
+    const fileInput = document.getElementById('p-pdf');
+    if (fileInput) fileInput.value = '';
+    showToast('PDF removed', 'success');
 }
 
 function saveAdminPlan() {
@@ -294,6 +398,16 @@ function saveAdminPlan() {
         route
     };
 
+    // Handle PDF data
+    if (_pendingPdfData) {
+        planData.pdfData = _pendingPdfData;
+        planData.pdfName = _pendingPdfName;
+    } else if (_pdfRemoved) {
+        planData.pdfData = null;
+        planData.pdfName = null;
+    }
+    // If neither _pendingPdfData nor _pdfRemoved, keep existing PDF (on edit)
+
     if (editingPlanId) {
         DataStore.updatePlan(editingPlanId, planData);
         showToast('Plan updated', 'success');
@@ -302,6 +416,10 @@ function saveAdminPlan() {
         showToast('Plan created', 'success');
     }
 
+    // Reset temp state
+    _pendingPdfData = null;
+    _pendingPdfName = null;
+    _pdfRemoved = false;
     editingPlanId = null;
     initAdminPanel();
 }
